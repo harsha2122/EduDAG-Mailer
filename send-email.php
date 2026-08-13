@@ -179,10 +179,36 @@ function getTemplateNameFromPath($path) {
     return pathinfo($path, PATHINFO_FILENAME);
 }
 
+function logoContentId() {
+    return 'edudag-logo@edudag';
+}
+
+function loadLogoAsset() {
+    $logoPath = __DIR__ . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo.png';
+    if (!is_file($logoPath)) {
+        return null;
+    }
+
+    $content = file_get_contents($logoPath);
+    if ($content === false) {
+        return null;
+    }
+
+    return [
+        'name' => 'logo.png',
+        'mime' => getMimeTypeForFile($logoPath),
+        'content' => $content,
+        'cid' => logoContentId(),
+    ];
+}
+
 function renderTemplateBody($templateBody, $data) {
     $logoPath = __DIR__ . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'logo.png';
+    // Embed the logo inline (CID) instead of linking to a hosted URL, so it
+    // renders even before the site is live and isn't blocked by email
+    // clients that strip remote images by default.
     $logoSrc = is_file($logoPath)
-        ? rtrim(SITE_URL, '/') . '/images/logo.png'
+        ? 'cid:' . logoContentId()
         : '';
 
     $replacements = [
@@ -229,9 +255,11 @@ function sendEmail($to, $toName, $subject, $body, $attachments = []) {
     $subject = sanitizeText($subject) . ' [Ref: ' . $threadToken . ']';
     $subject = encodeSubject($subject);
 
+    $logoAsset = loadLogoAsset();
+
     // Use authenticated SMTP first so the API only reports success when the
     // mail server actually accepts the message.
-    if (sendViaSMTP($to, $toName, $subject, $body, $threadToken, $attachments)) {
+    if (sendViaSMTP($to, $toName, $subject, $body, $threadToken, $attachments, $logoAsset)) {
         return true;
     }
 
@@ -287,10 +315,10 @@ function smtpExpect($smtp, $expectedPrefix) {
     return strpos($response, $expectedPrefix) === 0 ? $response : false;
 }
 
-function buildMimeMessage($to, $toName, $subject, $body, $threadToken, $attachments) {
+function buildMimeMessage($to, $toName, $subject, $body, $threadToken, $attachments, $logoAsset = null) {
     $domain = preg_replace('/[^A-Za-z0-9.-]/', '', ($_SERVER['SERVER_NAME'] ?? 'localhost'));
     $mixedBoundary = mimePartBoundary();
-    $altBoundary = mimePartBoundary();
+    $relatedBoundary = mimePartBoundary();
 
     $headers = [];
     $headers[] = 'To: ' . $toName . ' <' . $to . '>';
@@ -301,17 +329,33 @@ function buildMimeMessage($to, $toName, $subject, $body, $threadToken, $attachme
     $headers[] = 'X-Entity-Ref-ID: ' . $threadToken;
     $headers[] = 'X-Mailer: PHP/' . phpversion();
 
+    $htmlPart = 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+    $htmlPart .= 'Content-Transfer-Encoding: 8bit' . "\r\n\r\n";
+    $htmlPart .= $body;
+
+    if ($logoAsset) {
+        // multipart/related lets the html reference the logo via cid: so it
+        // displays inline without depending on a hosted image URL.
+        $bodyPart = 'Content-Type: multipart/related; boundary="' . $relatedBoundary . '"' . "\r\n\r\n";
+        $bodyPart .= '--' . $relatedBoundary . "\r\n";
+        $bodyPart .= $htmlPart . "\r\n\r\n";
+        $bodyPart .= '--' . $relatedBoundary . "\r\n";
+        $bodyPart .= 'Content-Type: ' . $logoAsset['mime'] . '; name="' . addslashes($logoAsset['name']) . '"' . "\r\n";
+        $bodyPart .= 'Content-Transfer-Encoding: base64' . "\r\n";
+        $bodyPart .= 'Content-ID: <' . $logoAsset['cid'] . '>' . "\r\n";
+        $bodyPart .= 'Content-Disposition: inline; filename="' . addslashes($logoAsset['name']) . '"' . "\r\n\r\n";
+        $bodyPart .= chunk_split(base64_encode($logoAsset['content'])) . "\r\n";
+        $bodyPart .= '--' . $relatedBoundary . "--\r\n";
+    } else {
+        $bodyPart = $htmlPart;
+    }
+
     $message = implode("\r\n", $headers) . "\r\n";
 
     if (!empty($attachments)) {
         $message .= 'Content-Type: multipart/mixed; boundary="' . $mixedBoundary . '"' . "\r\n\r\n";
         $message .= '--' . $mixedBoundary . "\r\n";
-        $message .= 'Content-Type: multipart/alternative; boundary="' . $altBoundary . '"' . "\r\n\r\n";
-        $message .= '--' . $altBoundary . "\r\n";
-        $message .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-        $message .= 'Content-Transfer-Encoding: 8bit' . "\r\n\r\n";
-        $message .= $body . "\r\n\r\n";
-        $message .= '--' . $altBoundary . "--\r\n";
+        $message .= $bodyPart . "\r\n\r\n";
 
         foreach ($attachments as $attachment) {
             $message .= '--' . $mixedBoundary . "\r\n";
@@ -323,15 +367,13 @@ function buildMimeMessage($to, $toName, $subject, $body, $threadToken, $attachme
 
         $message .= '--' . $mixedBoundary . "--\r\n";
     } else {
-        $message .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
-        $message .= 'Content-Transfer-Encoding: 8bit' . "\r\n\r\n";
-        $message .= $body;
+        $message .= $bodyPart;
     }
 
     return $message;
 }
 
-function sendViaSMTP($to, $toName, $subject, $body, $threadToken, $attachments = []) {
+function sendViaSMTP($to, $toName, $subject, $body, $threadToken, $attachments = [], $logoAsset = null) {
     $smtp = @fsockopen(SMTP_HOST, SMTP_PORT, $errno, $errstr, 15);
     if (!$smtp) {
         if (DEBUG_MODE) {
@@ -439,7 +481,7 @@ function sendViaSMTP($to, $toName, $subject, $body, $threadToken, $attachments =
             return false;
         }
 
-        $message = buildMimeMessage($to, $toName, $subject, $body, $threadToken, $attachments);
+        $message = buildMimeMessage($to, $toName, $subject, $body, $threadToken, $attachments, $logoAsset);
         $message = preg_replace("/\r\n\./", "\r\n..", $message);
 
         fwrite($smtp, $message . "\r\n.\r\n");
