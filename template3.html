@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; padding: 0; background: #f6f2ee; font-family: Arial, Helvetica, sans-serif; color: #1f1f1f; }
+        .wrap { width: 100%; padding: 24px 12px; box-sizing: border-box; }
+        .card { max-width: 680px; margin: 0 auto; background: #fff; border-radius: 24px; overflow: hidden; border: 1px solid #eadfd7; }
+        .hero { background: linear-gradient(135deg, #111111 0%, #c62828 100%); color: #fff; padding: 28px; text-align: center; }
+        .hero img { width: 82px; height: 82px; object-fit: contain; background: #fff; border-radius: 22px; padding: 10px; display: block; margin: 0 auto; }
+        .hero h1 {
+            margin: 16px auto 6px;
+            font-size: 26px;
+            line-height: 1.15;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .hero p {
+            margin: 0 auto;
+            color: rgba(255,255,255,0.86);
+            line-height: 1.45;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .content { padding: 30px 28px 12px; }
+        .body-box { background: #fbf7f4; border: 1px solid #eadfd7; border-left: 5px solid #c62828; border-radius: 18px; padding: 22px; min-width: 0; }
+        .custom-body { color: #2c2622; line-height: 1.7; font-size: 15px; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+        .custom-body p { margin: 0 0 14px; }
+        .custom-body p:last-child { margin-bottom: 0; }
+        .custom-body ul, .custom-body ol { margin: 0 0 14px 18px; padding: 0; }
+        .custom-body li { margin: 8px 0; }
+        .custom-body img { max-width: 100%; height: auto; }
+        .custom-body table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+        .custom-body td, .custom-body th { word-break: break-word; }
+        .footer { background: #faf7f4; padding: 20px 24px 26px; border-top: 1px solid #eadfd7; text-align: center; }
+        .footer .brand { font-size: 18px; font-weight: 700; color: #111111; margin-bottom: 8px; }
+        .footer .brand img { width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 14px; padding: 6px; display: block; margin: 0 auto 10px; }
+        .footer p { margin: 6px 0; font-size: 12px; color: #6b5f56; line-height: 1.6; }
+        @media only screen and (max-width: 600px) {
+            .wrap { padding: 8px 6px; }
+            .content { padding: 22px 18px 8px; }
+            .hero { padding: 22px 18px; }
+            .footer { padding: 18px 18px 22px; }
+            .hero h1 { font-size: 20px; }
+            .hero p { font-size: 13px; }
+            .body-box { padding: 14px; }
+            .custom-body { font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; word-break: break-word; }
+            .hero img { width: 70px; height: 70px; padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="card">
+            <div class="hero">
+                <img src="{logo_src}" alt="EduDAG Logo">
+                <h1>{custom_header_title}</h1>
+                <p>{custom_header_text}</p>
+            </div>
+
+            <div class="content">
+                <div class="body-box">
+                    <div class="custom-body">
+                        {custom_body_html}
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="brand">
+                    <img src="{logo_src}" alt="EduDAG Logo">
+                    EduDAG
+                </div>
+                <p><strong>Samsmrtya Education Services Pvt. Ltd.</strong></p>
+                <p>Toll-Free: 1800-3000-2688</p>
+                <p>Website: aliceblue-newt-694310.hostingersite.com | Email: info@edudag.com</p>
+                <p>This email is confidential and intended solely for the addressee. If received in error, please delete it and notify the sender.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; padding: 0; background: #f6f2ee; font-family: Arial, Helvetica, sans-serif; color: #1f1f1f; }
+        .email-wrap { width: 100%; padding: 24px 12px; box-sizing: border-box; }
+        .container { max-width: 680px; margin: 0 auto; background: #ffffff; border-radius: 24px; overflow: hidden; border: 1px solid #eadfd7; }
+        .hero { background: linear-gradient(135deg, #111111 0%, #c62828 100%); color: #fff; padding: 32px 28px; text-align: center; }
+        .hero img { width: 86px; height: 86px; object-fit: contain; background: #fff; border-radius: 22px; padding: 10px; box-sizing: border-box; display: block; margin: 0 auto; }
+        .hero h1 { margin: 18px 0 8px; font-size: 28px; line-height: 1.15; }
+        .hero p { margin: 0; color: rgba(255,255,255,0.88); font-size: 14px; line-height: 1.45; }
+        .content { padding: 30px 28px 10px; }
+        .intro { font-size: 16px; line-height: 1.65; margin: 0 0 22px; color: #2c2622; }
+        .section { margin: 0 0 24px; }
+        .section-title { font-size: 18px; font-weight: 700; color: #8e1b1b; margin: 0 0 14px; padding-bottom: 10px; border-bottom: 2px solid #eadfd7; }
+        .info-box { background: #fbf7f4; border: 1px solid #eadfd7; border-left: 5px solid #c62828; border-radius: 18px; padding: 18px; }
+        .fee-pill { display: inline-block; background: #111111; color: #fff; padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 14px; }
+        .muted { color: #6b5f56; font-size: 13px; line-height: 1.6; }
+        ul.clean-list { margin: 12px 0 0; padding-left: 20px; }
+        ul.clean-list li { margin: 8px 0; line-height: 1.5; color: #3b332d; }
+        .college-box { background: #fff; border: 1px solid #eadfd7; border-radius: 16px; padding: 14px 18px; }
+        .college-box ul { margin: 0; padding-left: 18px; }
+        .college-box li { margin: 10px 0; }
+        .cta { text-align: center; padding: 12px 0 24px; }
+        .button { display: inline-block; background: #c62828; color: #fff !important; text-decoration: none; padding: 14px 24px; border-radius: 14px; font-weight: 700; }
+        .footer { background: #faf7f4; padding: 20px 24px 26px; border-top: 1px solid #eadfd7; text-align: center; }
+        .footer .brand { font-size: 18px; font-weight: 700; color: #111111; margin-bottom: 8px; }
+        .footer .brand img { width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 14px; padding: 6px; display: block; margin: 0 auto 10px; }
+        .footer p { margin: 6px 0; font-size: 12px; color: #6b5f56; line-height: 1.6; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table td { padding: 11px 0; vertical-align: top; border-bottom: 1px solid #f0e8e2; font-size: 14px; }
+        .table td:first-child { width: 40%; font-weight: 700; color: #4b4038; padding-right: 12px; }
+        .payment-grid { border: 1px solid #eadfd7; border-radius: 18px; overflow: hidden; }
+        .payment-grid .top { background: #111111; color: #fff; padding: 14px 18px; font-weight: 700; }
+        .payment-grid .body { padding: 18px; }
+        .note { background: #fff8e8; border-left: 4px solid #d9a12b; padding: 14px 16px; border-radius: 12px; color: #5c4b19; }
+        @media only screen and (max-width: 600px) {
+            .email-wrap { padding: 8px 6px; }
+            .content { padding: 22px 18px 8px; }
+            .hero { padding: 22px 18px; }
+            .footer { padding: 18px 18px 22px; }
+            .hero h1 { font-size: 21px; }
+            .hero p { font-size: 13px; }
+            .intro { font-size: 14px; line-height: 1.55; }
+            .section { margin-bottom: 18px; }
+            .section-title { font-size: 15px; margin-bottom: 10px; padding-bottom: 8px; }
+            .info-box, .college-box, .note, .payment-grid .body { padding: 13px; }
+            .fee-pill { font-size: 12px; padding: 6px 11px; }
+            .muted { font-size: 12px; line-height: 1.52; }
+            .table td { font-size: 12px; }
+            .table td { display: block; width: 100%; padding: 6px 0; }
+            .table td:first-child { padding-bottom: 0; }
+            .hero img { width: 70px; height: 70px; padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrap">
+        <div class="container">
+            <div class="hero">
+                <img src="{logo_src}" alt="EduDAG Logo">
+                <h1>Admission Process Initiation</h1>
+                <p>EduDAG support for profile-based MBA applications</p>
+            </div>
+
+            <div class="content">
+                <p class="intro">Hi <strong>{client_name}</strong>,</p>
+                <p class="intro">Thank you for considering EduDAG as your admission partner. Following your discussion with SME <strong>{sme_name}</strong>, we are pleased to begin the process for your MBA application journey.</p>
+
+                <div class="section">
+                    <div class="section-title">Initial Step</div>
+                    <div class="info-box">
+                        <p style="margin:0 0 10px;">To begin the process, please complete the <strong>Auditing and Verification Fee</strong>.</p>
+                        <span class="fee-pill">&#8377;{audit_fee}/-</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">College Options</div>
+                    <div class="college-box">
+                        <p style="margin-top:0; color:#4b4038;">Please review the colleges below and reply with your preferred choices:</p>
+                        <ul>
+                            {college_list}
+                        </ul>
+                    </div>
+                    <p class="muted" style="margin-top:12px;">Additional colleges may be considered during the process depending on seat availability and your profile fit.</p>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Profile Assistance & Registration</div>
+                    <div class="info-box">
+                        <p style="margin-top:0;">Upon receiving a GD/PI call from any selected college, the <strong>Profile Assistance & Registration Fee</strong> will be applicable.</p>
+                        <span class="fee-pill">&#8377;{profile_fee}/-</span>
+                        <p class="muted" style="margin-top:12px;">This covers profile development support, documentation, mentorship, application drafting, mock interviews, essay support, resume assistance, and related coordination services.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Services Included</div>
+                    <ul class="clean-list">
+                        <li>Document verification and profile enhancement</li>
+                        <li>SME guidance and mentorship</li>
+                        <li>Application drafting and filing support</li>
+                        <li>Mock interviews and GD/PI preparation</li>
+                        <li>LOR, SOP, essay, and resume support</li>
+                        <li>Accommodation, loan, and visa guidance where applicable</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Application Process</div>
+                    <div class="info-box">
+                        <ul class="clean-list" style="margin-top:0;">
+                            <li>EduDAG will create and manage the application credentials.</li>
+                            <li>You will review the applications before submission and pay the official college fees separately.</li>
+                            <li>If the process is discontinued midway, the application credentials and completed work will not be shared.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Service Fees</div>
+                    <div class="note">
+                        The professional service fee for the complete admission process is between <strong>Rs {service_fee}/-</strong>.
+                        This amount becomes payable to EduDAG once you successfully clear aptitude tests, writing assessments, interview rounds, and receive confirmation of an offer letter.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Payment Obligation</div>
+                    <div class="info-box">
+                        You are contractually required to pay the service fee upon accepting an official offer letter from any applied college.
+                        This obligation applies irrespective of whether the offer letter is collected directly from the institution or communicated via EduDAG.
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Refund Policy</div>
+                    <p class="muted" style="margin:0;">In the unlikely event of not receiving any offer letter from the colleges you confirmed via email and the official EduDAG WhatsApp group, <strong>you will be eligible for a refund of the ₹33,000/- Profile Assistance & Registration Fee.</strong></p>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Payment Details</div>
+                    <div class="payment-grid">
+                        <div class="top">Initial Payment - &#8377;{audit_fee}/-</div>
+                        <div class="body">
+                            <p style="margin-top:0;">Please complete the initial fee using one of the methods below:</p>
+                            <p style="margin:0 0 12px;"><strong>Razorpay:</strong> <a href="https://pages.razorpay.com/pl_NPf5mJOt64aHz6/view" target="_blank" rel="noopener noreferrer">https://pages.razorpay.com/pl_NPf5mJOt64aHz6/view</a></p>
+                            <table class="table" role="presentation">
+                                <tr><td>Account Name</td><td>SAMSMRTYA EDUCATION SERVICES PVT LTD</td></tr>
+                                <tr><td>Bank Name</td><td>HDFC Bank, Vasant Vihar, New Delhi</td></tr>
+                                <tr><td>Account Number</td><td>50200082410165</td></tr>
+                                <tr><td>IFSC Code</td><td>HDFC0000011</td></tr>
+                                <tr><td>Account Type</td><td>Current</td></tr>
+                                <tr><td>UPI ID</td><td>8882922458@hdfcbank</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta">
+                    <p style="margin:0 0 14px;">We look forward to supporting you throughout your MBA admission journey.</p>
+                    <a href="https://aliceblue-newt-694310.hostingersite.com" class="button">Visit EduDAG</a>
+                </div>
+
+                <p class="intro" style="margin-bottom:0;">Best regards,<br><strong>Team EduDAG</strong></p>
+            </div>
+
+            <div class="footer">
+                <div class="brand">
+                    <img src="{logo_src}" alt="EduDAG Logo">
+                    EduDAG
+                </div>
+                <p><strong>Samsmrtya Education Services Pvt. Ltd.</strong></p>
+                <p>Toll-Free: 1800-3000-2688</p>
+                <p>Website: aliceblue-newt-694310.hostingersite.com | Email: info@edudag.com</p>
+                <p>This email is confidential and intended solely for the addressee. If received in error, please delete it and notify the sender.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
