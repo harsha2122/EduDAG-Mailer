@@ -244,6 +244,7 @@ const templates = {
 };
 
 const form = document.getElementById('emailForm');
+const sendButton = document.getElementById('sendButton');
 const templateSelect = document.getElementById('templateSelect');
 const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
 const dynamicFields = document.getElementById('dynamicFields');
@@ -537,7 +538,11 @@ function loadTemplateFields() {
                     ]
                 }
             });
-            customQuill.root.innerHTML = hiddenInput.value || '<p><br></p>';
+            // Assigning root.innerHTML directly leaves Quill's internal Delta
+            // model out of sync, so the content can get reset back to empty
+            // on the next editor update. Route it through the clipboard API
+            // so Quill registers the content properly.
+            customQuill.clipboard.dangerouslyPasteHTML(hiddenInput.value || '<p><br></p>');
             hiddenInput.value = customQuill.root.innerHTML;
             customQuill.on('text-change', () => {
                 hiddenInput.value = customQuill.root.innerHTML;
@@ -875,6 +880,10 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
+        if (bulkInFlight) {
+            return;
+        }
+
         if (customQuill) {
             const hiddenInput = document.getElementById('custom_body_html');
             if (hiddenInput) {
@@ -914,6 +923,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function performSend(recipients, isBulk) {
+    if (sendButton) sendButton.disabled = true;
     const formData = new FormData(form);
 
     formData.delete('attachments[]');
@@ -954,6 +964,8 @@ async function performSend(recipients, isBulk) {
         }
     } catch (error) {
         showMessage('error', 'An unexpected error occurred while sending.');
+    } finally {
+        if (sendButton) sendButton.disabled = false;
     }
 }
 
@@ -961,14 +973,19 @@ async function performBulkQueue(recipients) {
     if (bulkInFlight) return;
     bulkInFlight = true;
     if (bulkConfirmButton) bulkConfirmButton.disabled = true;
+    if (sendButton) sendButton.disabled = true;
 
+    // Dedupe defensively so a single confirmed batch can never send more
+    // than one copy of each template to any recipient.
+    const uniqueRecipients = Array.from(new Set(recipients));
     const templatesToSend = bulkTemplateOrder.filter(name => templates[name]);
     const jobs = [];
-    for (const recipient of recipients) {
+    for (const recipient of uniqueRecipients) {
         for (const templateName of templatesToSend) {
             jobs.push({ recipient, templateName });
         }
     }
+    recipients = uniqueRecipients;
     const totalJobs = jobs.length;
     let completed = 0;
     const failed = [];
@@ -1046,6 +1063,7 @@ async function performBulkQueue(recipients) {
     }
 
     bulkInFlight = false;
+    if (sendButton) sendButton.disabled = false;
     if (bulkConfirmTitle) bulkConfirmTitle.textContent = 'Bulk Send Complete';
     if (bulkConfirmSubtitle) bulkConfirmSubtitle.textContent = `Finished ${completed} sends across ${recipients.length} recipient(s).`;
     if (bulkConfirmButton) bulkConfirmButton.classList.add('hidden');

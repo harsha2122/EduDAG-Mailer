@@ -24,7 +24,7 @@ define('TEMPLATE_DIR', __DIR__ . DIRECTORY_SEPARATOR);
 define('DOCS_DIR', __DIR__ . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR);
 
 // Enable/Disable Debug Mode
-define('DEBUG_MODE', true);
+define('DEBUG_MODE', false);
 
 // Prefer SMTP delivery. Keep the local mail() fallback disabled unless
 // you explicitly need to use the server's mail transfer agent.

@@ -251,7 +251,7 @@ if (empty($_SESSION['mailer_authenticated'])) {
                         <button type="button" id="previewButton" class="glow-button bg-[var(--edudag-black)] hover:bg-black text-white font-bold py-3.5 px-6 rounded-2xl transition">
                             Preview Email
                         </button>
-                        <button type="submit" class="glow-button bg-[var(--edudag-red)] hover:bg-[var(--edudag-red-dark)] text-white font-bold py-3.5 px-6 rounded-2xl transition">
+                        <button type="submit" id="sendButton" class="glow-button bg-[var(--edudag-red)] hover:bg-[var(--edudag-red-dark)] text-white font-bold py-3.5 px-6 rounded-2xl transition">
                             Send Email
                         </button>
                     </div>
